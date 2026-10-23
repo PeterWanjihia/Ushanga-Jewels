@@ -1,0 +1,30 @@
+{
+  "name": "Ushanga-Jewels",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "db:ping": "node scripts/db-ping.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.4",
+    "nuxt": "^4.6.2",
+    "pg": "^8.23.1",
+    "vue": "^3.5.44",
+    "vue-router": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1",
+    "dotenv": "^18.0.9",
+    "drizzle-kit": "^0.31.11",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.3.13"
+  }
+}

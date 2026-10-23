@@ -1,0 +1,51 @@
+name: ushanga-db
+
+services:
+  db_lab:
+    image: postgres:17.11-trixie
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ushanga_lab
+      POSTGRES_USER: ushanga_lab
+      POSTGRES_PASSWORD: ${USHANGA_LAB_PASSWORD:?Password required}
+
+    ports:
+      - "127.0.0.1:5433:5432"
+
+    volumes:
+      - lab_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ushanga_lab -d ushanga_lab"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  db_dev:
+    image: postgres:17.11-trixie
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ushanga_dev
+      POSTGRES_USER: ushanga_dev
+      POSTGRES_PASSWORD: ${USHANGA_DEV_PASSWORD:?Password required}
+
+    ports:
+      - "127.0.0.1:5434:5432"
+
+    volumes:
+      - dev_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ushanga_dev -d ushanga_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  lab_data:
+
+  dev_data:
+    external: true
+    name: ushanga_dev_data

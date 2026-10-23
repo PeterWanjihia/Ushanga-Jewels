@@ -1,0 +1,50 @@
+import { config } from 'dotenv'
+import pg from 'pg'
+
+const result = config({ path: '.env.docker', quiet: true })
+
+if (result.error) {
+  throw result.error
+}
+
+const target = process.env.USHANGA_DB_TARGET
+
+if (target !== 'lab' && target !== 'dev') {
+  throw new Error('Specify USHANGA_DB_TARGET=lab or dev')
+}
+
+const password = process.env[
+  target === 'lab' ? 'USHANGA_LAB_PASSWORD' : 'USHANGA_DEV_PASSWORD'
+]
+
+if (!password) {
+  throw new Error(`Missing password for ${target} database`)
+}
+
+const client = new pg.Client({
+  host: '127.0.0.1',
+  port: target === 'lab' ? 5433 : 5434,
+  user: `ushanga_${target}`,
+  database: `ushanga_${target}`,
+  password,
+  ssl: false,
+})
+
+await client.connect()
+
+const { rows } = await client.query<{
+  current_database: string
+  current_user: string
+}>('select current_database(), current_user')
+
+const row = rows[0]
+
+if (!row) {
+  throw new Error('Connection succeeded but returned no row')
+}
+
+console.log(
+  `target=${target} database=${row.current_database} user=${row.current_user}`,
+)
+
+await client.end()
