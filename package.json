@@ -11,7 +11,8 @@
     "typecheck": "nuxt typecheck",
     "db:ping": "node scripts/db-ping.ts",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed:demo": "node scripts/db-seed-demo.ts --demo"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.4",

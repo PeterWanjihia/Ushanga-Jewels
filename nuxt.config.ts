@@ -8,4 +8,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     databaseUrl: '',
   },
+
+  css: ['~/assets/css/main.css'],
 })
