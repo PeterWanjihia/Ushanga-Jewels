@@ -2,7 +2,7 @@ import { config } from 'dotenv'
 import { eq } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import pg from 'pg'
-import { products, productVariants } from '../server/db/schema'
+import { products, productVariants } from '../server/db/schema.ts'
 
 // Explicitly opt in: this script must never target a real client or lab database.
 if (process.env.USHANGA_DB_TARGET !== 'dev' || !process.argv.includes('--demo')) {
@@ -57,6 +57,9 @@ try {
     }
   })
   console.log('Dev-only demo seed completed: 48 catalog samples (safe to rerun)')
+} catch {
+  console.error('Demo seed failed; connection details withheld')
+  process.exitCode = 1
 } finally {
   await pool.end()
 }

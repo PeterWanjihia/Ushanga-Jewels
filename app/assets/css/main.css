@@ -95,3 +95,11 @@ h2, h3 { font-family: 'Playfair Display', Georgia, serif; font-weight: 500; }
 .detail-back { display: inline-block; margin-top: 30px; text-decoration: underline; text-underline-offset: 4px; font-size: 14px; }
 @media (max-width: 850px) { .hero-content { grid-template-columns: 1fr; gap: 0; min-height: 0; } .hero { min-height: auto; } .hero-copy { padding: 75px 0 25px; } .hero-art { height: 270px; } .hero-gem { font-size: 140px; } .hero-orbit { width: 250px; } .hero-art-caption { bottom: 16px; } .product-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } .detail-layout { gap: 35px; } .detail-art { min-height: 400px; } }
 @media (max-width: 600px) { .container { width: min(100% - 34px, 1160px); } .site-header-inner { min-height: 72px; flex-wrap: wrap; padding: 12px 0; } .wordmark { font-size: 13px; } .site-nav { gap: 20px; font-size: 11px; } .hero h1 { font-size: 54px; } .section-heading { display: block; } .section-heading p { margin-top: 14px; } .collection-section { padding: 65px 0 75px; } .product-grid { grid-template-columns: 1fr; gap: 18px; } .product-card-art { height: 280px; } .catalog-search { gap: 7px; padding-left: 11px; } .catalog-search .button { padding: 14px 13px; } .footer-inner { flex-direction: column; text-align: center; } .detail-layout { grid-template-columns: 1fr; } .detail-art { min-height: 340px; } .detail-section { padding: 32px 0 70px; } .detail-content { padding-top: 4px; } }
+
+.demo-notice { border-left: 3px solid #af8c61; background: #f0ebe1; padding: 14px 18px; font-size: 13px; line-height: 1.6; margin: 0 0 28px; }
+.placeholder-caption { position: absolute; bottom: 14px; left: 14px; font-size: 11px; color: #253a2f; background: #fffcf5e6; padding: 5px 8px; }
+.detail-art { position: relative; }
+.product-card h3, .detail-content h1, .detail-description, .detail-reference, .breadcrumb { overflow-wrap: anywhere; }
+.pagination { flex-wrap: wrap; gap: 15px; }
+button:focus-visible, a:focus-visible { outline: 2px solid #a47b4f; outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; } }

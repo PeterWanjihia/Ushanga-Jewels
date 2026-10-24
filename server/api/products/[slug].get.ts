@@ -1,46 +1,49 @@
-import { and, eq } from 'drizzle-orm'
+
 import { getDatabase } from '../../db'
-import { products, productVariants } from '../../db/schema'
+import {
+  findCatalogueProduct,
+  isValidProductSlug,
+} from '../../services/catalogue'
 
 export default defineEventHandler(async (event) => {
+  // 1. Extract the product slug from the URL.
   const slug = getRouterParam(event, 'slug') ?? ''
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length > 150) {
-    throw createError({ statusCode: 404, statusMessage: 'Product not found' })
+
+  // 2. Reject invalid product identifiers.
+  if (!isValidProductSlug(slug)) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Product not found',
+    })
   }
 
+  let product: Awaited<ReturnType<typeof findCatalogueProduct>>
+
+  // 3. Retrieve the product from the catalogue service.
   try {
     const db = getDatabase()
-    const [product] = await db.select({
-      id: products.id,
-      slug: products.slug,
-      name: products.name,
-      description: products.description,
-    }).from(products).where(and(eq(products.slug, slug), eq(products.status, 'active'))).limit(1)
 
-    if (!product) {
-      throw createError({ statusCode: 404, statusMessage: 'Product not found' })
-    }
-
-    const variants = await db.select({
-      id: productVariants.id,
-      sku: productVariants.sku,
-      label: productVariants.label,
-      pricePence: productVariants.pricePence,
-      inventoryMode: productVariants.inventoryMode,
-      stockOnHand: productVariants.stockOnHand,
-    }).from(productVariants).where(and(
-      eq(productVariants.productId, product.id),
-      eq(productVariants.isActive, true),
-    ))
-
-    if (variants.length === 0) {
-      throw createError({ statusCode: 404, statusMessage: 'Product not found' })
-    }
-
-    return { ...product, variants }
+    product = await findCatalogueProduct(db, slug)
   } catch (error) {
-    if ((error as { statusCode?: number })?.statusCode === 404) throw error
-    console.error('Product query failed', error instanceof Error ? error.message : 'unknown error')
-    throw createError({ statusCode: 503, statusMessage: 'The product is temporarily unavailable' })
+    // Log a safe classification, never raw database errors.
+    console.error('[catalogue] Failed to retrieve product', {
+      errorType: error instanceof Error ? error.name : 'UnknownError',
+    })
+
+    throw createError({
+      statusCode: 503,
+      statusMessage: 'The product is temporarily unavailable',
+    })
   }
+
+  // 4. A missing or non-public product returns HTTP 404.
+  if (!product) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Product not found',
+    })
+  }
+
+  // 5. Return the publicly visible product and its variants.
+  return product
 })

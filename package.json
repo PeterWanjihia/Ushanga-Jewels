@@ -12,7 +12,12 @@
     "db:ping": "node scripts/db-ping.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:seed:demo": "node scripts/db-seed-demo.ts --demo"
+    "db:seed:demo": "node scripts/db-seed-demo.ts --demo",
+    "test": "pnpm test:db",
+    "test:db": "USHANGA_DB_TARGET=dev node --test --test-concurrency=1 tests/catalogue.test.ts tests/seed.test.ts",
+    "test:api": "node --test tests/api.test.ts",
+    "test:e2e": "playwright test",
+    "test:api:failure": "node --test --test-concurrency=1 tests/api-failure.test.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.4",
@@ -22,10 +27,14 @@
     "vue-router": "^5.4.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@types/pg": "^8.23.1",
     "dotenv": "^18.0.9",
     "drizzle-kit": "^0.31.11",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.3.13"
+  },
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
   }
 }

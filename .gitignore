@@ -24,3 +24,7 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
+
+# Browser test output
+playwright-report/
+test-results/
